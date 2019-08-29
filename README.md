@@ -25,6 +25,11 @@ curl -sSL https://raw.githubusercontent.com/donilan/dtools/master/centos_latest_
 curl -sSL https://raw.githubusercontent.com/donilan/dtools/master/enable_bbr.sh | sudo bash
 ```
 
+## Insall Traefik
+```bash
+curl -sSL https://raw.githubusercontent.com/donilan/dtools/master/install_traefik.sh  | bash
+```
+
 ## OSX tools
 batch reduce image size
 ``` bash
