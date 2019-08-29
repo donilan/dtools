@@ -1,21 +1,27 @@
-#!/usr/bin/env
+#!/usr/bin/env bash
 
-sudo yum install curl -y
-sudo curl -L https://github.com/containous/traefik/releases/download/v1.7.14/traefik_linux-amd64 -o /usr/local/bin/traefik
+set -xe
+
+if [ ! -f /usr/local/bin/traefik ] ; then
+    sudo yum install curl -y
+    sudo curl -L https://github.com/containous/traefik/releases/download/v1.7.14/traefik_linux-amd64 -o /usr/local/bin/traefik
+fi
+
 sudo chown root:root /usr/local/bin/traefik
 sudo chmod 755 /usr/local/bin/traefik
-
 sudo setcap 'cap_net_bind_service=+ep' /usr/local/bin/traefik
 
-sudo groupadd -g 321 traefik
-sudo useradd \
-  -g traefik --no-user-group \
-  --home-dir /var/www --no-create-home \
-  --shell /usr/sbin/nologin \
-  --system --uid 321 traefik
+if [ -z "$(id -u traefik)" ] ; then
+    sudo groupadd traefik
+    sudo useradd \
+	-g traefik --no-user-group \
+	--home-dir /var/www --no-create-home \
+	--shell /usr/sbin/nologin \
+	--system --uid 321 traefik
+fi
 
-sudo mkdir /etc/traefik
-sudo mkdir /etc/traefik/acme
+sudo mkdir -p /etc/traefik
+sudo mkdir -p /etc/traefik/acme
 sudo chown -R root:root /etc/traefik
 sudo chown -R traefik:traefik /etc/traefik/acme
 
@@ -86,7 +92,7 @@ Group=traefik
 ; Always set "-root" to something safe in case it gets forgotten in the traefikfile.
 ExecStart=/usr/local/bin/traefik --configfile=/etc/traefik/traefik.toml
 
-; Limit the number of file descriptors; see `man systemd.exec` for more limit settings.
+; Limit the number of file descriptors; see man systemd.exec for more limit settings.
 LimitNOFILE=1048576
 
 ; Use private /tmp and /var/tmp, which are discarded after traefik stops.
