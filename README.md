@@ -1,6 +1,8 @@
 # dtools
 some personal tools
 
+IMPORTANT: moved to https://gist.github.com/donilan
+
 ## init emacs
 
 ``` bash
